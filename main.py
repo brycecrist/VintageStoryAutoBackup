@@ -2,6 +2,7 @@ import pathlib
 import os
 import shutil
 import datetime
+from time import sleep
 
 root_path = pathlib.Path(__file__).parent.resolve()
 
@@ -85,22 +86,26 @@ def init():
     check_for_folder("playerdata")
 
 def backup():
-    print("Backing up data...")
-    clean_backups("saves")
-    clean_backups("maps")
-    clean_backups("playerdata")
-    
-    backup_folder("saves")
-    backup_folder("maps")
-    backup_folder("playerdata")
-    print("Done...")
+    time_to_save = 3600 # 1 hour
+    while (True):
+        print("Backing up data...")
+        clean_backups("saves")
+        clean_backups("maps")
+        clean_backups("playerdata")
+        
+        backup_folder("saves")
+        backup_folder("maps")
+        backup_folder("playerdata")
+        print(f"Done... waiting until {'{:%H:%M:%S}'.format(datetime.datetime.now() + datetime.timedelta(hours=1))} to do another backup\n")
+        sleep(time_to_save)
 
 def main():
-    print("Initializing...")
+    print("\n********** Initializing VS Auto Backup **********\n")
 
     init()
 
     print("\n********** Finished Init **********\n")
+    print("Will back up every 1 hour")
 
     backup()
 
